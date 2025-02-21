@@ -1,27 +1,4 @@
 # Sistema-monitoramento-Aedes
-// src/App.js - Estrutura inicial do sistema import React from 'react'; import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; import Home from './pages/Home'; import Report from './pages/Report'; import Dashboard from './pages/Dashboard'; import Navbar from './components/Navbar';
-
-function App() { return ( <Router> <Navbar /> <Routes> <Route path='/' element={<Home />} /> <Route path='/report' element={<Report />} /> <Route path='/dashboard' element={<Dashboard />} /> </Routes> </Router> ); }
-
-export default App;
-
-
-// src/App.js - Estrutura inicial do sistema import React from 'react'; import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; import Home from './pages/Home'; import Report from './pages/Report'; import Dashboard from './pages/Dashboard'; import Navbar from './components/Navbar'; import OccurrenceForm from './pages/OccurrenceForm';
-
-function App() { return ( <Router> <Navbar /> <Routes> <Route path='/' element={<Home />} /> <Route path='/report' element={<Report />} /> <Route path='/dashboard' element={<Dashboard />} /> <Route path='/occurrence' element={<OccurrenceForm />} /> </Routes> </Router> ); }
-
-export default App;
-
-// src/App.js - Estrutura inicial do sistema import React from 'react'; import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; import Home from './pages/Home'; import Report from './pages/Report'; import Dashboard from './pages/Dashboard'; import Navbar from './components/Navbar'; import OccurrenceForm from './pages/OccurrenceForm';
-
-function App() { return ( <Router> <Navbar /> <Routes> <Route path='/' element={<Home />} /> <Route path='/report' element={<Report />} /> <Route path='/dashboard' element={<Dashboard />} /> <Route path='/occurrence' element={<OccurrenceForm />} /> </Routes> </Router> ); }
-
-export default App;
-
-// src/pages/OccurrenceForm.js - Formulário de Cadastro de Ocorrências import React, { useState } from 'react'; import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"; import { getFirestore, collection, addDoc } from "firebase/firestore"; import { app } from "../firebaseConfig";
-
-const storage = getStorage(app); const db = getFirestore(app);
-
 function OccurrenceForm() { const [image, setImage] = useState(null); const [location, setLocation] = useState(null); const [description, setDescription] = useState("");
 
 const handleImageUpload = async (e) => { const file = e.target.files[0]; if (!file) return; const storageRef = ref(storage, occurrences/${file.name}); await uploadBytes(storageRef, file); const url = await getDownloadURL(storageRef); setImage(url); };
