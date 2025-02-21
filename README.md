@@ -46,7 +46,6 @@ return ( <div> <h2>Lista de Ocorrências</h2> <input type="text" placeholder="Fi
 
 export default OccurrenceList;
 // src/App.js - Estrutura inicial do sistema import React, { useEffect } from 'react'; import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; import Home from './pages/Home'; import Report from './pages/Report'; import Dashboard from './pages/Dashboard'; import Navbar from './components/Navbar'; import OccurrenceForm from './pages/OccurrenceForm'; import OccurrenceList from './pages/OccurrenceList'; import { getMessaging, onMessage } from "firebase/messaging"; import { app } from "./firebaseConfig";
-
 function App() { useEffect(() => { const messaging = getMessaging(app); onMessage(messaging, (payload) => { alert(Nova ocorrência registrada: ${payload.notification.title}); }); }, []);
 
 return ( <Router> <Navbar /> <Routes> <Route path='/' element={<Home />} /> <Route path='/report' element={<Report />} /> <Route path='/dashboard' element={<Dashboard />} /> <Route path='/occurrence' element={<OccurrenceForm />} /> <Route path='/occurrences' element={<OccurrenceList />} /> </Routes> </Router> ); }
