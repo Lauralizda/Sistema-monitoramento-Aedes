@@ -45,6 +45,19 @@ useEffect(() => { const fetchOccurrences = async () => { let q = collection(db, 
 return ( <div> <h2>Lista de Ocorrências</h2> <input type="text" placeholder="Filtrar por descrição..." value={filter} onChange={(e) => setFilter(e.target.value)} /> <input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} /> <input type="text" placeholder="Filtrar por localização..." value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} /> <ul> {occurrences.map((occurrence) => ( <li key={occurrence.id}> <img src={occurrence.image} alt="Ocorrência" width="100" /> <p>{occurrence.description}</p> <p>Data: {new Date(occurrence.timestamp?.toDate()).toLocaleDateString()}</p> <p>Localização: {occurrence.location.lat}, {occurrence.location.lng}</p> </li> ))} </ul> </div> ); }
 
 export default OccurrenceList;
+// src/App.js - Estrutura inicial do sistema import React, { useEffect } from 'react'; import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; import Home from './pages/Home'; import Report from './pages/Report'; import Dashboard from './pages/Dashboard'; import Navbar from './components/Navbar'; import OccurrenceForm from './pages/OccurrenceForm'; import OccurrenceList from './pages/OccurrenceList'; import { getMessaging, onMessage } from "firebase/messaging"; import { app } from "./firebaseConfig";
+
+function App() { useEffect(() => { const messaging = getMessaging(app); onMessage(messaging, (payload) => { alert(Nova ocorrência registrada: ${payload.notification.title}); }); }, []);
+
+return ( <Router> <Navbar /> <Routes> <Route path='/' element={<Home />} /> <Route path='/report' element={<Report />} /> <Route path='/dashboard' element={<Dashboard />} /> <Route path='/occurrence' element={<OccurrenceForm />} /> <Route path='/occurrences' element={<OccurrenceList />} /> </Routes> </Router> ); }
+
+export default App;
+
+// Firebase Cloud Messaging Configuração import { getToken } from "firebase/messaging";
+
+export const requestNotificationPermission = async () => { const messaging = getMessaging(app); try { const permission = await Notification.requestPermission(); if (permission === "granted") { const token = await getToken(messaging, { vapidKey: "SUA_VAPID_KEY" }); console.log("Token de notificação registrado:", token); } } catch (error) { console.error("Erro ao obter permissão para notificações", error); } };
+
+
 
 
 
