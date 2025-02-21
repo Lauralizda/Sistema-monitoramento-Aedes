@@ -55,6 +55,32 @@ export default App;
 // Firebase Cloud Messaging Configuração import { getToken } from "firebase/messaging";
 
 export const requestNotificationPermission = async () => { const messaging = getMessaging(app); try { const permission = await Notification.requestPermission(); if (permission === "granted") { const token = await getToken(messaging, { vapidKey: "SUA_VAPID_KEY" }); console.log("Token de notificação registrado:", token); } } catch (error) { console.error("Erro ao obter permissão para notificações", error); } };
+// src/App.js - Estrutura inicial do sistema import React, { useEffect, useState } from 'react'; import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; import Home from './pages/Home'; import Report from './pages/Report'; import Dashboard from './pages/Dashboard'; import Navbar from './components/Navbar'; import OccurrenceForm from './pages/OccurrenceForm'; import OccurrenceList from './pages/OccurrenceList'; import Login from './pages/Login'; import { getMessaging, onMessage } from "firebase/messaging"; import { app, auth } from "./firebaseConfig"; import { onAuthStateChanged } from "firebase/auth";
+
+function App() { const [user, setUser] = useState(null);
+
+useEffect(() => { const messaging = getMessaging(app); onMessage(messaging, (payload) => { alert(Nova ocorrência registrada: ${payload.notification.title}); }); }, []);
+
+useEffect(() => { onAuthStateChanged(auth, (user) => { setUser(user); }); }, []);
+
+return ( <Router> <Navbar user={user} /> <Routes> <Route path='/' element={user ? <Home /> : <Login />} /> <Route path='/report' element={user ? <Report /> : <Login />} /> <Route path='/dashboard' element={user ? <Dashboard /> : <Login />} /> <Route path='/occurrence' element={user ? <OccurrenceForm /> : <Login />} /> <Route path='/occurrences' element={user ? <OccurrenceList /> : <Login />} /> </Routes> </Router> ); }
+
+export default App;
+
+// src/pages/Login.js - Página de Autenticação import React from 'react'; import { signInWithPopup, GoogleAuthProvider } from "firebase/auth"; import { auth } from "../firebaseConfig";
+
+function Login() { const handleLogin = async () => { const provider = new GoogleAuthProvider(); try { await signInWithPopup(auth, provider); } catch (error) { console.error("Erro ao fazer login", error); } };
+
+return ( <div> <h2>Login</h2> <button onClick={handleLogin}>Entrar com Google</button> </div> ); }
+
+export default Login;
+
+// src/firebaseConfig.js - Configuração do Firebase import { initializeApp } from "firebase/app"; import { getAuth } from "firebase/auth"; import { getFirestore } from "firebase/firestore"; import { getMessaging } from "firebase/messaging";
+
+const firebaseConfig = { apiKey: "SUA_API_KEY", authDomain: "SEU_AUTH_DOMAIN", projectId: "SEU_PROJECT_ID", storageBucket: "SEU_STORAGE_BUCKET", messagingSenderId: "SEU_MESSAGING_SENDER_ID", appId: "SEU_APP_ID" };
+
+export const app = initializeApp(firebaseConfig); export const auth = getAuth(app); export const db = getFirestore(app); export const messaging = getMessaging(app);
+
 
 
 
